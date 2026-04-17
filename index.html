@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Salud Metabólica y Tiroidea</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #f2f2f2;
+    text-align: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 360px;
+    margin: auto;
+    box-shadow: 0px 0px 12px rgba(0,0,0,0.2);
+}
+
+input, select {
+    width: 90%;
+    padding: 8px;
+    margin: 6px 0;
+}
+
+button {
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+#resultado {
+    margin-top: 15px;
+    text-align: left;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🧠 Sistema de Salud Metabólica</h2>
+<p>IMC + Metabolismo + Tiroides (simulado)</p>
+
+<input id="peso" placeholder="Peso (kg)">
+<input id="altura" placeholder="Altura (m)">
+<input id="edad" placeholder="Edad">
+
+<select id="sexo">
+<option value="M">Hombre</option>
+<option value="F">Mujer</option>
+</select>
+
+<select id="actividad">
+<option value="1">Baja actividad</option>
+<option value="2">Media actividad</option>
+<option value="3">Alta actividad</option>
+</select>
+
+<h4>Hábitos</h4>
+
+<input id="ultra" placeholder="Ultraprocesados (0-3)">
+<input id="sueno" placeholder="Horas de sueño">
+<input id="ejercicio" placeholder="Días ejercicio/semana">
+
+<button onclick="calcular()">Calcular</button>
+
+<div id="resultado"></div>
+
+</div>
+
+<script>
+function calcular() {
+
+let peso = parseFloat(document.getElementById("peso").value);
+let altura = parseFloat(document.getElementById("altura").value);
+let edad = parseInt(document.getElementById("edad").value);
+let sexo = document.getElementById("sexo").value;
+let actividad = parseInt(document.getElementById("actividad").value);
+
+let ultra = parseInt(document.getElementById("ultra").value);
+let sueno = parseInt(document.getElementById("sueno").value);
+let ejercicio = parseInt(document.getElementById("ejercicio").value);
+
+// IMC
+let imc = peso / (altura * altura);
+
+let estado = "";
+
+if (imc < 18.5) estado = "Bajo peso";
+else if (imc < 25) estado = "Normal";
+else if (imc < 30) estado = "Sobrepeso";
+else estado = "Obesidad";
+
+// TMB (Mifflin-St Jeor simplificada)
+let tmb;
+
+if (sexo === "M") {
+tmb = 88.36 + (13.4 * peso) + (4.8 * altura * 100) - (5.7 * edad);
+} else {
+tmb = 447.6 + (9.2 * peso) + (3.1 * altura * 100) - (4.3 * edad);
+}
+
+let calorias;
+
+if (actividad === 1) calorias = tmb * 1.2;
+else if (actividad === 2) calorias = tmb * 1.55;
+else calorias = tmb * 1.75;
+
+// Riesgo metabólico
+let riesgo = 0;
+
+if (imc >= 25) riesgo++;
+if (ultra >= 2) riesgo++;
+if (sueno < 6) riesgo++;
+if (ejercicio < 2) riesgo++;
+
+// Simulación tiroidea
+let tiroides = "";
+
+if (imc >= 30 && ultra >= 2) {
+tiroides = "Posible riesgo de hipotiroidismo (simulado)";
+} else if (imc < 18.5 && ejercicio >= 3) {
+tiroides = "Posible hiperactividad metabólica (simulado)";
+} else {
+tiroides = "Función tiroidea estimada normal";
+}
+
+// Mostrar resultados
+document.getElementById("resultado").innerHTML = `
+<h3>Resultados</h3>
+<p><b>IMC:</b> ${imc.toFixed(2)} (${estado})</p>
+<p><b>Metabolismo estimado:</b> ${calorias.toFixed(0)} kcal/día</p>
+<p><b>Evaluación tiroidea:</b> ${tiroides}</p>
+<p><b>Índice de riesgo:</b> ${riesgo}/4</p>
+`;
+
+}
+</script>
+
+</body>
+</html>
